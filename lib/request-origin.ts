@@ -1,0 +1,1 @@
+export function allowedOrigin(origin:string|null,host:string|null,url:string){if(!origin)return true;try{const source=new URL(origin);return ['http:','https:'].includes(source.protocol)&&source.host===(host??new URL(url).host);}catch{return false;}}
