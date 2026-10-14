@@ -1,0 +1,153 @@
+{
+  "version": 2,
+  "status": "local-postgres-tested-neon-pending",
+  "database": "Neon PostgreSQL",
+  "migration": "db/002_app.sql",
+  "tables": {
+    "app_workspaces": {
+      "id": "uuid primary key",
+      "onboarded": "boolean",
+      "version": "integer",
+      "updated_at": "timestamptz"
+    },
+    "app_entities": {
+      "workspace_id": "uuid foreign key",
+      "kind": "text",
+      "id": "uuid",
+      "position": "integer",
+      "payload": "jsonb validated by lib/model.ts",
+      "primary_key": [
+        "workspace_id",
+        "kind",
+        "id"
+      ]
+    },
+    "app_requests": {
+      "workspace_id": "uuid foreign key",
+      "request_key": "uuid",
+      "result_version": "integer",
+      "created_at": "timestamptz",
+      "primary_key": [
+        "workspace_id",
+        "request_key"
+      ]
+    }
+  },
+  "entity_fields": {
+    "categories": [
+      "id",
+      "name",
+      "color"
+    ],
+    "activities": [
+      "id",
+      "name",
+      "goal",
+      "categoryId"
+    ],
+    "slots": [
+      "id",
+      "activityId",
+      "day",
+      "start",
+      "end"
+    ],
+    "plans": [
+      "id",
+      "title",
+      "start",
+      "end",
+      "priority",
+      "success",
+      "estimated",
+      "improvement"
+    ],
+    "tasks": [
+      "id",
+      "planId",
+      "activityId",
+      "title",
+      "due",
+      "priority",
+      "tags",
+      "estimated",
+      "done",
+      "deleted",
+      "created"
+    ],
+    "records": [
+      "id",
+      "taskId",
+      "requestKey",
+      "start",
+      "end",
+      "minutes",
+      "blocked",
+      "note"
+    ],
+    "revisions": [
+      "id",
+      "planId",
+      "at",
+      "snapshot"
+    ],
+    "reviews": [
+      "id",
+      "planId",
+      "reflection",
+      "improvement",
+      "nextPlanId"
+    ]
+  },
+  "relations": {
+    "database_enforced": [
+      "app_entities.workspace_id -> app_workspaces.id",
+      "app_requests.workspace_id -> app_workspaces.id"
+    ],
+    "server_validated": [
+      "activities.categoryId -> categories.id",
+      "slots.activityId -> activities.id",
+      "tasks.planId -> plans.id",
+      "tasks.activityId -> activities.id",
+      "records.taskId -> tasks.id",
+      "revisions.planId -> plans.id",
+      "reviews.planId -> plans.id",
+      "reviews.nextPlanId -> plans.id"
+    ]
+  },
+  "date_rules": {
+    "timezone": "Asia/Seoul",
+    "dates": "YYYY-MM-DD",
+    "instants": "ISO 8601 UTC; entered as Seoul local time",
+    "duration": "integer minutes, excluding breaks if entered",
+    "slot_day": "Monday=0 Sunday=6",
+    "slot_time": "minutes after midnight, weekly repetition"
+  },
+  "aggregation_rules": {
+    "scope": "selected plan, not-deleted tasks",
+    "planned": "count tasks",
+    "completed": "count currently done tasks",
+    "overdue": "not done and due before Seoul today",
+    "blocked": "distinct tasks with nonblank blocked reason",
+    "estimated": "sum task.estimated",
+    "actual": "sum corresponding record.minutes",
+    "difference": "actual - estimated",
+    "empty_sum": 0,
+    "evidence": "same filters and deletion scope"
+  },
+  "integrity": {
+    "save": "row lock, version check, changed entities and unique request receipt in one transaction",
+    "read": "repeatable read snapshot",
+    "history": "old records and revisions preserved; new and modified plans require snapshots"
+  },
+  "access": {
+    "mode": "public shared workspace without authentication",
+    "secrets": "DATABASE_URL server-only; .env.local ignored"
+  },
+  "limitations": [
+    "Full workspace API needs paging and scoped partial updates for production multi-user operation",
+    "Neon actual connection pending",
+    "Personal authentication not implemented"
+  ],
+  "superseded": "db/001_initial.sql unapplied earlier draft, do not execute"
+}
