@@ -1,0 +1,4 @@
+import pg from 'pg';
+const workspace='0a87cb91-7d54-48bc-acf3-6bb15f192131';
+const client=new pg.Client({connectionString:process.env.DATABASE_URL});
+try{await client.connect();await client.query('BEGIN');const rows=await client.query("SELECT payload FROM app_entities WHERE workspace_id=$1 AND kind='activities'",[workspace]);if(rows.rows.some(r=>r.payload.name!=='검증용 요일별 활동'))throw Error('Unexpected content');for(const table of ['app_entities','app_requests','app_workspaces'])await client.query(`DELETE FROM ${table} WHERE ${table==='app_workspaces'?'id':'workspace_id'}=$1`,[workspace]);await client.query('COMMIT');console.log('Isolated QA workspace removed; public workspace untouched.');}catch{await client.query('ROLLBACK');console.error('QA cleanup failed');process.exitCode=1;}finally{await client.end();}
