@@ -1,0 +1,1 @@
+export default function WaxSeal(){return <span className="wax-seal" role="img" aria-label="다이어리와 만년필 성취 인장"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25"/><path d="M17 20h19v28H17q-5 0-5-5V25q0-5 5-5Zm0 0v28M22 27h9M22 33h9M22 39h7M33 43l7-16 10-7 3 3-7 10-13 10Zm7-16 6 6M43 30l7-7"/></svg></span>}
