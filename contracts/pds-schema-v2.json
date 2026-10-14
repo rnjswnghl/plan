@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "status": "local-postgres-tested-neon-pending",
+  "status": "neon-migrated-api-save-reload-idempotency-verified",
   "database": "Neon PostgreSQL",
   "migration": "db/002_app.sql",
   "tables": {
@@ -153,7 +153,6 @@
   },
   "limitations": [
     "Full workspace API needs paging and scoped partial updates for production multi-user operation",
-    "Neon actual connection pending",
     "Personal authentication not implemented"
   ],
   "superseded": "db/001_initial.sql unapplied earlier draft, do not execute",
