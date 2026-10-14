@@ -1,4 +1,4 @@
-async function chooseTime(scope,name,value){const label=name==='start'?'시작':'종료';const parts=value.split(':');for(let i=0;i<2;i++){await scope.getByRole('combobox',{name:label+(i?' 분':' 시'),exact:true}).click();await scope.getByRole('option',{name:parts[i]+(i?'분':'시'),exact:true}).click();}}
+async function chooseTime(scope,name,value){const label=name==='start'?'시작':'종료';const parts=value.split(':');for(let i=0;i<2;i++){await scope.getByRole('combobox',{name:label+(i?' 분':' 시'),exact:true}).click();await scope.getByRole('option',{name:new RegExp('^'+parts[i]+(i?'분':'시'))}).click();}}
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
