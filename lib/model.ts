@@ -18,6 +18,7 @@ export const stateSchema=z.object({onboarded:z.boolean(),categories:z.array(cate
  if(new Set(s.reviews.map(r=>r.planId)).size!==s.reviews.length)issue('중복 회고');
  if((s.achievements??[]).some(a=>!has(s.slots,a.slotId)))issue('완료한 일정이 없습니다.');
  if(new Set((s.achievements??[]).map(a=>a.slotId+a.date)).size!==(s.achievements??[]).length)issue('중복 일정 완료');
+ for(let i=0;i<s.slots.length;i++)for(let j=i+1;j<s.slots.length;j++){const a=s.slots[i],b=s.slots[j];const dayOf=(v:string)=>(new Date(v+'T12:00:00+09:00').getUTCDay()+6)%7;const same=a.date&&b.date?a.date===b.date:a.date?dayOf(a.date)===b.day:b.date?dayOf(b.date)===a.day:a.day===b.day;if(same&&a.start<b.end&&b.start<a.end)issue('시간이 겹치는 일정이 있습니다.');}
 });
 export type State=z.infer<typeof stateSchema>;
 export function canonical(value:unknown):string{if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';if(value&&typeof value==='object')return '{'+Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>JSON.stringify(k)+':'+canonical(v)).join(',')+'}';return JSON.stringify(value);}
@@ -29,4 +30,3 @@ export function validateTransition(previous:State,next:State){
  for(const rev of previous.revisions)if(!next.revisions.some(r=>r.id===rev.id&&canonical(r)===canonical(rev)))throw Error('수정 이력은 보존해야 합니다.');
  for(const plan of next.plans){const old=previous.plans.find(p=>p.id===plan.id);if((!old||canonical(old)!==canonical(plan))&&!next.revisions.some(r=>r.planId===plan.id&&canonical(r.snapshot)===canonical(plan)&&!previous.revisions.some(o=>o.id===r.id)))throw Error('계획 변경 이력이 필요합니다.');}
 }
-

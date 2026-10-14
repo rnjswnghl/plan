@@ -8,7 +8,8 @@
       "id": "uuid primary key",
       "onboarded": "boolean",
       "version": "integer",
-      "updated_at": "timestamptz"
+      "updated_at": "timestamptz",
+      "settings": "jsonb showTasks/showContent"
     },
     "app_entities": {
       "workspace_id": "uuid foreign key",
@@ -97,6 +98,12 @@
       "reflection",
       "improvement",
       "nextPlanId"
+    ],
+    "achievements": [
+      "id",
+      "slotId",
+      "date",
+      "at"
     ]
   },
   "relations": {
@@ -149,5 +156,32 @@
     "Neon actual connection pending",
     "Personal authentication not implemented"
   ],
-  "superseded": "db/001_initial.sql unapplied earlier draft, do not execute"
+  "superseded": "db/001_initial.sql unapplied earlier draft, do not execute",
+  "calendar_update": {
+    "overlap": "server validates weekly and single-date overlaps; adjacent intervals allowed",
+    "workspace_settings": [
+      "showTasks",
+      "showContent"
+    ],
+    "stamps": "past or today only, all scheduled slots explicitly marked completed OR all due tasks completed by that date",
+    "task_fields": [
+      "completedOn"
+    ],
+    "achievement_fields": [
+      "id",
+      "slotId",
+      "date",
+      "at"
+    ],
+    "activity_kind": [
+      "learning",
+      "todo"
+    ],
+    "slot_fields": [
+      "date",
+      "content"
+    ],
+    "migration": "db/003_calendar.sql",
+    "streak": "consecutive successful dates ending today or yesterday"
+  }
 }
