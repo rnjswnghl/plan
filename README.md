@@ -1,4 +1,4 @@
-# 마이학기 — T06
+# SuGang — T06
 
 취준생·직장인의 나만의 수강신청. 활동·목표 등록 → 주간 시간표 → 할 일·짧은 일지 → 회고.
 
@@ -16,7 +16,7 @@ http://127.0.0.1:3000 에서 확인한다. DB가 준비되지 않으면 메모�
 ## Neon 연결
 
 1. .env.local에 DATABASE_URL=postgresql://... 값을 입력한다.
-2. pnpm db:migrate로 **db/002_app.sql과 db/003_calendar.sql**을 적용한다.
+2. pnpm db:migrate로 **db/002_app.sql, db/003_calendar.sql, db/004_http_save.sql**을 적용한다.
 3. 개발 서버를 재시작하고 브라우저를 새로고침한다.
 4. 서버 DB 연결 상태와 입력 후 새로고침 유지 여부를 확인한다.
 
@@ -46,10 +46,11 @@ scripts/browser-check.cjs는 Playwright와 Edge가 있는 개발 환경에서 �
 
 ## 현재 제한
 
-Neon 실제 연결은 환경변수 입력 전이라 미검증이다. PostgreSQL 테스트는 로컬 PGlite로 수행했다. T06은 공개된 공용 공간을 사용하며 개인 계정·권한은 다음 단계다. 변경 데이터만 DB에 쓰지만 API는 공간 전체를 조회·전송하므로 장기 다중 사용자 서비스 전에 부분 업데이트·페이지 조회·권한 검증이 필요하다.
+Neon 실제 연결과 공개 사이트 API 조회를 검증했다. 현재 테이블은 app_workspaces(공용 공간·버전·설정), app_entities(활동·시간표·할 일·실행 기록 등 JSONB), app_requests(중복 저장 요청 방지)이며 sugang_save 함수가 원자적 저장을 처리한다. PostgreSQL 테스트는 로컬 PGlite도 사용한다. T06은 공개된 공용 공간을 사용하며 개인 계정·권한은 다음 단계다. 변경 데이터만 DB에 쓰지만 API는 공간 전체를 조회·전송하므로 장기 다중 사용자 서비스 전에 부분 업데이트·페이지 조회·권한 검증이 필요하다.
 
-최종 제출에 필요한 실제 사용자 계획 1개·할 일 5개·실행 기록 3개는 아직 입력되지 않았다. 외부 배포·GitHub 업로드는 아직 하지 않았다.
+최종 제출에 필요한 실제 사용자 계획 1개·할 일 5개·실행 기록 3개는 아직 입력되지 않았다. 공개 배포 주소: https://sugang.rnjswnghl.chatgpt.site . DB 테이블은 이미 적용되어 있으며 이후 변경은 마이그레이션으로 관리한다. GitHub에는 코드와 SQL 정의를 올리고 DB 비밀번호·실제 사용자 데이터는 올리지 않는다.
 
 참고 저장소: https://github.com/rnjswnghl/plan.git
 노션: https://app.notion.com/p/3f97740536fc81c59081f066c3a5ce4c
+
 
