@@ -1,0 +1,101 @@
+{
+  "at": "2026-10-15T13:58:13.453Z",
+  "t06Commit": "83f28e7",
+  "environment": "local Next.js + real Neon, ephemeral QA accounts",
+  "events": [
+    {
+      "check": "anonymous private API",
+      "results": [
+        401,
+        "login screen"
+      ]
+    },
+    {
+      "check": "duplicate registration cannot create second account",
+      "results": [
+        1
+      ]
+    },
+    {
+      "check": "same password salted scrypt storage",
+      "results": [
+        [
+          "65e7…[redacted]",
+          "b11a…[redacted]"
+        ]
+      ]
+    },
+    {
+      "check": "cross-account GET",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "cross-account PATCH",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "cross-account DELETE",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "cross-account GET",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "cross-account PATCH",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "cross-account DELETE",
+      "results": [
+        404
+      ]
+    },
+    {
+      "check": "forbidden writes preserve both counts",
+      "results": [
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "check": "same URL/method before and after logout",
+      "results": [
+        "GET /api/state 200",
+        "GET /api/state 401"
+      ]
+    },
+    {
+      "check": "unknown account and wrong password",
+      "results": [
+        401,
+        "Invalid email or password"
+      ]
+    },
+    {
+      "check": "delete account cascades own data and revokes session",
+      "results": [
+        0,
+        401
+      ]
+    },
+    {
+      "check": "expired database session",
+      "results": [
+        401
+      ]
+    }
+  ]
+}

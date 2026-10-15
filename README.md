@@ -1,56 +1,37 @@
-# SuGang — T06
+# SuGang · T07
 
-취준생·직장인의 나만의 수강신청. 활동·목표 등록 → 주간 시간표 → 할 일·짧은 일지 → 회고.
+T06 최종 커밋 `83f28e7`에서 이어집니다. 브랜치 `t07-auth`, 기준 태그 `t06-submission-83f28e7`.
 
 ## 실행
 
-Node.js 20.9 이상과 pnpm으로 실행한다.
+`pnpm install` 후 `.env.local`에 DATABASE_URL, 32자 이상 무작위 BETTER_AUTH_SECRET, BETTER_AUTH_URL을 설정합니다. 예제 파일에는 비밀값이 없습니다.
 
-```sh
-pnpm install
-pnpm dev
-```
+인증 마이그레이션: `node --env-file=.env.local node_modules/tsx/dist/cli.mjs scripts/migrate-auth.ts`
 
-http://127.0.0.1:3000 에서 확인한다. DB가 준비되지 않으면 메모리 미리보기로 동작하며 새로고침하면 입력이 사라진다.
+로컬 실행: `pnpm dev --port 3007` (BETTER_AUTH_URL은 http://127.0.0.1:3007).
 
-## Neon 연결
+## 구현
 
-1. .env.local에 DATABASE_URL=postgresql://... 값을 입력한다.
-2. pnpm db:migrate로 **db/002_app.sql, db/003_calendar.sql, db/004_http_save.sql**을 적용한다.
-3. 개발 서버를 재시작하고 브라우저를 새로고침한다.
-4. 서버 DB 연결 상태와 입력 후 새로고침 유지 여부를 확인한다.
+- Better Auth 1.7.10 이메일 가입·로그인·로그아웃, scrypt 해시, 서버 DB 세션(3일), 로그인 시도 제한.
+- 미로그인 첫 화면은 로그인 화면. API는 화면과 별개로 세션을 검사합니다.
+- t07_ 전용 인증/공간/자료/요청 테이블. T06 공개 자료와 완전히 분리합니다.
+- 모든 목록·저장·내보내기는 세션 user.id를 사용합니다. 주소·헤더·본문으로 다른 소유자를 지정하면 404.
+- 남의 항목 GET/PATCH/DELETE는 404, 변경 전후 양쪽 자료 건수 유지.
+- 비밀번호 변경 시 다른 세션 취소 후 현재 세션도 로그아웃. 계정 삭제는 자료·요청·인증·세션을 FK cascade로 삭제.
+- 서버 내보내기에는 현재 계정의 자료만 포함하며 비밀번호·세션은 포함하지 않습니다.
 
-비밀번호는 채팅·노션·Git에 넣지 않는다. **db/001_initial.sql은 이전 미적용 초안으로 실행하지 않는다.**
+## 확인
 
-## 기능
+`pnpm typecheck`, `pnpm test`, `pnpm build`.
 
-- 수강신청 목록, 학습/할 일 토글, 시간 중복 검사와 신청 완료 후 시간표 생성
-- 월간·주간·일간, 빈 시간 클릭·범위 드래그, 블록 드래그 이동 후 확인 저장
-- 내용/할 일 표시 옵션, 기본 카테고리, 월간 토끼 스탬프·연속 일수
+`node --env-file=.env.local scripts/auth-check.cjs`는 Playwright가 필요합니다. 임시 두 계정으로 실제 Neon 검증 후 계정/자료를 정리하고, 비밀값을 가린 결과를 docs/auth-verification.json에 저장합니다.
 
-- 최초 활동 등록·빈 시간표 시작, 카테고리 이름/색상 사용자화
-- 주간 반복 시간표 배치·수정·삭제, 활동 이름/목표 수정
-- 계획 변경 이력, 할 일 생성·수정·완료·취소·삭제·검색·필터·정렬
-- 실행 시간·막힌 이유·일지, 회고 집계와 근거 기록, 다음 계획으로 개선점 전달
-- 전체 JSON 내보내기, 공개 안내, 입력 검증, 저장 충돌·중복 요청 처리
+## T06 자료 이전
 
-## 검증
+소유자 이메일을 지정받고 실제 가입한 뒤 개발자가 `scripts/import-t06.ts 이메일`을 실행합니다. 기존 계정 자료가 있으면 덮어쓰지 않습니다. 임의의 첫 가입자에게 공용 자료를 주지 않습니다. T06 원본은 보존하며 서버에서 지정 계정으로 스냅샷을 복사합니다. 현재 소유자 지정 대기라 실행하지 않았습니다.
 
-```sh
-pnpm typecheck
-pnpm test
-pnpm build
-```
+## 아직 남은 것
 
-scripts/browser-check.cjs는 Playwright와 Edge가 있는 개발 환경에서 실행한다. PLAYWRIGHT_MODULE로 Playwright 설치 경로를 지정할 수 있다.
+T07 공개 배포, 지정 계정으로 T06 자료 이전, 실제 5일 사용과 2일차 후~3일차 전 규칙 변경, 집계 수동 대조, 최종 제출 설명서. 개발용 QA 데이터를 실제 사용 기록으로 제출하지 않습니다.
 
-## 현재 제한
-
-Neon 실제 연결과 공개 사이트 API 조회를 검증했다. 현재 테이블은 app_workspaces(공용 공간·버전·설정), app_entities(활동·시간표·할 일·실행 기록 등 JSONB), app_requests(중복 저장 요청 방지)이며 sugang_save 함수가 원자적 저장을 처리한다. PostgreSQL 테스트는 로컬 PGlite도 사용한다. T06은 공개된 공용 공간을 사용하며 개인 계정·권한은 다음 단계다. 변경 데이터만 DB에 쓰지만 API는 공간 전체를 조회·전송하므로 장기 다중 사용자 서비스 전에 부분 업데이트·페이지 조회·권한 검증이 필요하다.
-
-최종 제출에 필요한 실제 사용자 계획 1개·할 일 5개·실행 기록 3개는 아직 입력되지 않았다. 공개 배포 주소: https://sugang.rnjswnghl.chatgpt.site . DB 테이블은 이미 적용되어 있으며 이후 변경은 마이그레이션으로 관리한다. GitHub에는 코드와 SQL 정의를 올리고 DB 비밀번호·실제 사용자 데이터는 올리지 않는다.
-
-참고 저장소: https://github.com/rnjswnghl/plan.git
-노션: https://app.notion.com/p/3f97740536fc81c59081f066c3a5ce4c
-
-
+인증 메일, 비밀번호 분실 재설정, MFA는 미구현입니다. 따라서 이메일 소유 확인과 계정 복구가 아직 제한되며 최종 설명서에 공개합니다.
