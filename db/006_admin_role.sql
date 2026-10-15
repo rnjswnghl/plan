@@ -1,0 +1,1 @@
+alter table "t07_user" add column "role" text default 'user' not null;
