@@ -1,6 +1,5 @@
-import {headers} from 'next/headers';
-import {auth} from '../lib/auth';
+import {pageSession} from '../lib/session';
 import AuthGate from './components/AuthGate';
 import Workspace from './components/Workspace';
 export const dynamic='force-dynamic';
-export default async function Page(){const session=await auth.api.getSession({headers:await headers()});return session?<Workspace key={session.user.id}/>:<AuthGate googleEnabled={!!(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET)}/>;}
+export default async function Page(){const session=await pageSession();return session?<Workspace key={session.user.id}/>:<AuthGate googleEnabled={!!(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET)}/>;}
