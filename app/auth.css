@@ -1,0 +1,91 @@
+/* T07 — 로그인(가죽 표지와 첫 장), 계정, 5일 관찰. 기존 에스프레소·양피지 토큰을 그대로 쓴다. */
+
+/* 사이드바 로고가 좁은 폭에서 잘리던 문제 */
+.brand>span:not(.brand-crest){white-space:nowrap;overflow:hidden;text-overflow:clip;min-width:0}
+.brand{min-width:0}
+aside .brand>span:not(.brand-crest){font-size:38px}
+
+/* ── 로그인: 왼쪽은 덮인 가죽 표지, 오른쪽은 펼친 첫 장 ── */
+.auth-shell{min-height:100vh;display:grid;grid-template-columns:minmax(320px,44%) 1fr;background:var(--paper)}
+.auth-cover{position:relative;background:linear-gradient(115deg,#1e1512,#2d1d17 62%,#160f0d);color:#e9cfa8;display:grid;place-items:center;padding:48px 36px;overflow:hidden}
+.auth-cover:before{content:"";position:absolute;inset:18px;border:1px solid #b68b4f5c;border-radius:22px;pointer-events:none}
+.auth-cover:after{content:"";position:absolute;inset:26px;border:1px dashed #b68b4f33;border-radius:16px;pointer-events:none}
+.auth-cover-inner{position:relative;text-align:center;max-width:360px}
+.auth-cover .brand-crest{display:inline-grid;place-items:center;width:74px;height:74px;border-radius:50%;border:1px solid #c79b62;color:#e3be86;background:radial-gradient(circle at 35% 30%,#5c3c29,#2a1a14)}
+.auth-cover .brand-crest svg{width:38px;height:38px}
+.auth-logo{font-family:var(--script);font-weight:400;font-size:clamp(64px,8vw,104px);line-height:1;margin:22px 0 4px;color:#ecd0a2;letter-spacing:0;text-shadow:0 1px 0 #00000080,0 0 24px #d7a76a26}
+.auth-script{font-family:var(--serif);font-style:italic;font-size:21px;color:#c9a57a;margin:0}
+.auth-rule{margin:26px auto;color:#b68b4f;font-size:15px;display:flex;align-items:center;gap:14px;justify-content:center}
+.auth-rule:before,.auth-rule:after{content:"";height:1px;width:70px;background:linear-gradient(90deg,transparent,#b68b4f99,transparent)}
+.auth-lede{font-family:var(--body);font-size:15px;line-height:1.95;color:#dcc2a0;margin:0}
+.auth-motto{font-family:var(--script);font-size:30px;color:#b98f63;margin:40px 0 0}
+
+.auth-main{display:grid;place-items:center;padding:48px 24px;background:url('/parchment.svg'),radial-gradient(circle at 20% 10%,#f1e4cd,#e4d2b4 70%,#d9c3a1)}
+.auth-sheet{width:min(420px,100%)}
+.auth-sheet .eyebrow{font-family:var(--serif);font-style:italic;font-size:22px;color:#8a6643;margin:0 0 6px}
+.auth-sheet h2{font-family:var(--body);font-size:30px;margin:0 0 26px;color:var(--ink);letter-spacing:-.02em}
+.auth-tabs{margin-bottom:24px}
+.auth-sheet form{display:grid;gap:14px}
+.auth-sheet .field input{width:100%}
+.auth-sheet .submit{width:100%;margin-top:6px;padding:14px}
+.auth-note{font-size:12.5px;line-height:1.7;color:var(--muted);margin-top:22px;padding-top:16px;border-top:1px solid #b3926b40}
+.account-ok{background:#e5d6b9;border:1px solid #b08c62;color:#5d3e26;border-radius:12px;padding:11px 14px;font-size:13px}
+
+@media (max-width:820px){
+ .auth-shell{grid-template-columns:1fr}
+ .auth-cover{padding:44px 24px 36px}
+ .auth-logo{font-size:68px;margin-top:12px}
+ .auth-lede,.auth-motto{display:none}
+ .auth-rule{margin:14px auto 0}
+ .auth-main{padding:32px 16px 48px;align-items:start}
+}
+
+/* ── 계정 ── */
+.account-panel .section-title{align-items:flex-start}
+.account-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:22px 0}
+.account-summary>div{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;background:linear-gradient(130deg,#dfc5a5,#ceb18d);border:1px solid #b08c62;border-radius:16px;padding:16px 18px}
+.account-summary svg{grid-row:span 2;width:26px;height:26px;color:#936b40}
+.account-summary span{font-size:11.5px;color:#846143}
+.account-summary strong{font-family:var(--serif);font-size:21px;color:#614129;overflow-wrap:anywhere}
+.account-card{border-top:1px solid #b3926b50;padding:24px 0 6px;display:grid;gap:12px;max-width:620px}
+.account-card h3{margin:0;font-family:var(--body);font-size:17px}
+.account-card p{margin:0;font-size:13px;line-height:1.7}
+.account-card>button{justify-self:start}
+.account-card.danger p b{color:var(--wine)}
+.danger-button{justify-self:start;background:#693c3214;border-color:#693c3266;color:var(--wine)}
+.danger-button:hover:not(:disabled){background:#693c32;color:#f3dfc6}
+
+/* ── 5일 관찰 ── */
+.observation .section-title{align-items:flex-end;gap:18px;flex-wrap:wrap}
+.observation-start{min-width:170px}
+.observation-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:20px 0 16px}
+.observation-day{display:grid;gap:6px;justify-items:center;background:#e7d1b56b;border:1px solid #b6946b55;border-radius:13px;padding:12px 8px;text-align:center}
+.observation-day.future{opacity:.45}
+.observation-day>span{font-size:11.5px;color:#84603f}
+.observation-bar{width:16px;height:64px;border-radius:8px;background:#b6946b2e;display:flex;align-items:flex-end;overflow:hidden}
+.observation-bar i{display:block;width:100%;background:linear-gradient(#a0703f,#6b4429);border-radius:8px;min-height:0}
+.observation-day strong{font-family:var(--serif);font-size:26px;color:#614129;line-height:1}
+.observation-day small{font-size:11px;color:var(--muted)}
+.observation-total{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.observation-total>div{display:grid;gap:3px;border-top:2px solid #936b40;padding-top:10px}
+.observation-total span{font-size:12px;color:#846143}
+.observation-total strong{font-family:var(--serif);font-size:30px;color:#4f3220;line-height:1.1}
+.observation-total small{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.observation-rule{margin-top:18px;font-size:13px}
+.observation-rule ul{margin:10px 0 0;padding-left:18px;line-height:1.8;color:#6d5440}
+
+@media (max-width:640px){
+ .account-summary,.observation-total{grid-template-columns:1fr}
+ .observation-grid{grid-template-columns:repeat(5,minmax(52px,1fr));overflow-x:auto}
+ .observation-day>span{font-size:10px}
+}
+:focus-visible{outline:2px solid #a0703f;outline-offset:2px}
+.auth-sub{font-size:13.5px;line-height:1.8;color:#6d5440;margin:-14px 0 22px}
+.auth-sheet .auth-switch{margin-top:6px}
+.auth-sheet .google-login{background:#fbf3e8}
+.auth-sheet form .field{margin:0;max-width:none}
+.observation-controls{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.observation-controls .field{margin:0}
+.observation-day.empty strong{font-size:16px;color:#9b8068;font-family:var(--body)}
+.observation-total>button{display:grid;gap:3px;text-align:left;border:0;border-top:2px solid #936b40;border-radius:0;background:none;padding:10px 0 0;box-shadow:none}
+.observation-total>button strong{font-size:22px}

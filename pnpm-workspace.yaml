@@ -1,5 +1,5 @@
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
 minimumReleaseAgeExclude:
   - '@better-auth/core@1.7.10'
   - '@better-auth/drizzle-adapter@1.7.10'
