@@ -12,6 +12,10 @@
     "test:auth": "node --env-file=.env.local scripts/auth-check.cjs"
   },
   "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/noto-sans-kr": "^5.3.1",
+    "@fontsource/noto-serif-kr": "^5.3.1",
+    "@fontsource/pinyon-script": "^5.3.0",
     "better-auth": "1.7.10",
     "next": "16.4.3",
     "pg": "^8.23.1",
